@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Создание соревнования</h1>
+</div>
+
+<form class="form-horizontal" id="competition">
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label ">Название:</label>
+        <div class="col-sm-10">
+            <input type="text" name="name" class="form-control" id="name" placeholder="Название Соревнования" required="required">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="startTime" class="col-sm-2 control-label ">Дата начала:</label>
+        <div class="col-sm-3">
+            <input type="text" name="startTime" class="form-control" id="startTime" placeholder="2017-04-17 17:00:00" required="required">
+        </div>
+        <label for="startTime" class="col-sm-2 control-label ">Дата завершения:</label>
+        <div class="col-sm-3">
+            <input type="text" name="endTime" class="form-control" id="endTime" placeholder="2017-04-17 20:00:00" required="required">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Теги:</label>
+        <div class="col-sm-10">
+            {% for k in 0..9 %}
+            <div class="col-sm-5">
+                <input type="text" name="tags[]" class="form-control" placeholder="Тег">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Чекпоинты:</label>
+        <div class="col-sm-10">
+
+            <div class="col-sm-3">
+                <input type="text" name="checkpoints[0][name]" class="form-control" placeholder="Старт">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="checkpoints[0][sort]" class="form-control" placeholder="1">
+            </div>
+            <div class="col-sm-3">
+                <input type="text" name="checkpoints[1][name]" class="form-control" placeholder="Финиш">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="checkpoints[1][sort]" class="form-control" placeholder="10">
+            </div>
+
+            {% for k in 2..9 %}
+            <div class="col-sm-3">
+                <input type="text" name="checkpoints[{{ k }}][name]" class="form-control" placeholder="Чекпоинт {{ k }}">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="checkpoints[{{ k }}][sort]" class="form-control" placeholder="{{ k }}">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Сохранить</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block page_js %}
+
+<script src="/js/jquery.serializejson.min.js"></script>
+<script>
+    function parseISOLocal(s) {
+        var b = s.split(/\D/);
+        return new Date(b[0], b[1]-1, b[2], b[3], b[4], b[5]);
+    }
+    $(function() { // on document load
+        $('#competition').submit(function () {
+
+            var data = $('#competition').serializeJSON();
+            data.startTime = parseISOLocal(data.startTime).getTime() / 1000;
+            data.endTime = parseISOLocal(data.endTime).getTime() / 1000;
+            var jsonData = JSON.stringify(data);
+            $.ajax({
+                url: '/api/competitions/',
+                data: jsonData,
+                dataType: 'json',
+                type: 'POST',
+                async: true,
+                success: function (data) { // callback method for further manipulations
+                    location.href = '/competitions/';
+                },
+                error: function (data) { // if error occured
+                    alert('error');
+                }
+            });
+            return false;
+        });
+    });
+</script>
+{% endblock %}

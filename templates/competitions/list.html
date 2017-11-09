@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Соревнования</h1>
+</div>
+
+<ul>
+    {% for competition in competitions %}
+    <li><a href="{{ path_for('viewCompetition', { 'competitionId': competition.id }) }}">{{competition.name}}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="page-header">
+    <h1>{{ competition.name }}</h1>
+</div>
+
+<ul>
+    Теги:
+    {% for tag in competition.tags %}
+    <li>{{ tag }}</li>
+    {% endfor %}
+</ul>
+
+<ul>
+    Чекпоинты:
+    {% for checkpoint in competition.checkpoints %}
+    <li>{{ checkpoint.name }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{{ path_for('editCompetition', { 'competitionId': competition.id }) }}">Редактировать</a>
+{% endblock %}

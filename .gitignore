@@ -1,0 +1,5 @@
+cache/*
+logs/*
+vendor/
+composer.phar
+config/config.php
