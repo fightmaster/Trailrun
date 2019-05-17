@@ -25,7 +25,7 @@ class EditCompetition
         $data['tags'] = !empty($data['tags']) ? $data['tags'] : [];
         $updatedTagInfo = $competition->alterTags($data['tags']);
         if (!empty($updatedTagInfo['deleted'])) {
-            //check checkpoints are unused in members
+            //check tags are unused in members
         }
 
         $updatedCheckpointInfo = $competition->alterCheckpoints($data['checkpoints']);

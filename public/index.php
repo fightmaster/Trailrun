@@ -6,3 +6,4 @@
 require dirname(__DIR__) . '/bootstrap/start.php';
 
 $app->run();
+$route = $app->getContainer()->get('request')->getUri()->getPath();

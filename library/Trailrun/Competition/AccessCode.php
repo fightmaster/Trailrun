@@ -61,8 +61,8 @@ class AccessCode implements StoreItemInterface
         $accessCode = new self();
         $accessCode->code = $row['code'];
         $accessCode->pass = $row['pass'];
-        $accessCode->competitionId = $row['competitionId'];
-        $accessCode->access = $row['access'];
+        $accessCode->competitionId = $row['competitionId'] ?? null;
+        $accessCode->access = $row['access'] ?? null;
         $accessCode->used = $row['used'];
 
         return $accessCode;

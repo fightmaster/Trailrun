@@ -8,15 +8,17 @@ namespace Fightmaster\Trailrun\Tests;
 
 use Interop\Container\ContainerInterface;
 use MongoDB\Database;
+use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 
-class TrailrunTestCase extends \PHPUnit_Framework_TestCase
+class TrailrunTestCase extends TestCase
 {
     /**
      * @var ContainerInterface
      */
     protected $container;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         require __DIR__ . '/../../../bootstrap/start.php';
 
@@ -36,5 +38,10 @@ class TrailrunTestCase extends \PHPUnit_Framework_TestCase
         foreach ($collectionNames as $collectionName) {
             $db->dropCollection($collectionName);
         }
+    }
+
+    protected function generateUuid1()
+    {
+        return Uuid::uuid1()->toString();
     }
 }

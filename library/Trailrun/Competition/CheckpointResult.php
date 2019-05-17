@@ -10,25 +10,59 @@ use Ramsey\Uuid\Uuid;
 
 class CheckpointResult implements StoreItemInterface
 {
+    /**
+     * @var string
+     */
     private $id;
+
+    /**
+     * @var string
+     */
+    private $competitionId;
+
+    /**
+     * @var string
+     */
     private $checkpointId;
+
+    /**
+     * @var string
+     */
     private $memberId;
+
+    /**
+     * @var int
+     */
     private $time;
+
+    /**
+     * @var array
+     */
     private $metaInfo;
 
     private function __construct()
     {
     }
 
-    public static function create($memberId, $time = null, $checkpointId = null)
+    /**
+     * @param string $competitionId
+     * @param string|null $memberId
+     * @param int|null $time
+     * @param null $checkpointId
+     * @return CheckpointResult
+     */
+    public static function create($competitionId, $memberId = null, $time = null, $checkpointId = null): CheckpointResult
     {
         $checkpointResult = new self();
         $timeForId = $time ?? time() + rand(-1000, 1000);
-        $checkpointResult->id = Uuid::uuid5(Uuid::NAMESPACE_X500, $memberId . '_' . $timeForId . '_' . $checkpointId);
+        $checkpointResult->id = Uuid::uuid5(Uuid::NAMESPACE_X500, $competitionId . '_' . $memberId . '_' . $timeForId . '_' . $checkpointId)->toString();
+        $checkpointResult->competitionId = $competitionId;
         $checkpointResult->checkpointId = $checkpointId;
         $checkpointResult->memberId = $memberId;
         $checkpointResult->time = $time;
         $checkpointResult->metaInfo['created'] = time();
+
+        return $checkpointResult;
     }
 
     public function edit($data)
@@ -42,12 +76,37 @@ class CheckpointResult implements StoreItemInterface
     }
 
     /**
+     * @return string
+     */
+    public function getCompetitionId()
+    {
+        return $this->competitionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMemberId()
+    {
+        return $this->memberId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCheckpointId()
+    {
+        return $this->checkpointId;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
     {
         return [
             'id' => $this->id,
+            'competitionId' => $this->competitionId,
             'checkpointId' => $this->checkpointId,
             'memberId' => $this->memberId,
             'time' => $this->time,
@@ -63,6 +122,7 @@ class CheckpointResult implements StoreItemInterface
     {
         $checkpointResult = new self();
         $checkpointResult->id = $row['id'];
+        $checkpointResult->competitionId = $row['competitionId'];
         $checkpointResult->checkpointId = $row['checkpointId'];
         $checkpointResult->memberId = $row['memberId'];
         $checkpointResult->time = $row['time'];

@@ -42,6 +42,9 @@ $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class] = fun
 $container[\Fightmaster\Trailrun\Competition\MemberRepository::class] = function ($container) {
     return new \Fightmaster\Trailrun\Competition\MemberRepository($container['db']);
 };
+$container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\CheckpointResultRepository($container['db']);
+};
 
 
 //handlers

@@ -14,6 +14,5 @@ if (APPLICATION_ENV == 'testing') {
 }
 
 $app = new \Slim\App(['settings' => $config]);
-
 require 'locator.php';
 require 'routes.php';

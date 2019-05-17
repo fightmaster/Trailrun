@@ -8,16 +8,25 @@ namespace Fightmaster\Trailrun\Competition;
 use Fightmaster\Trailrun\Database\MongoDB\BaseRepository;
 use Fightmaster\Trailrun\StoreItemInterface;
 
-class MemberRepository extends BaseRepository
+class CheckpointResultRepository extends BaseRepository
 {
     protected function getCollectionName()
     {
-        return 'member';
+        return 'checkpointResult';
+    }
+
+    /**
+     * @param $id
+     * @return CheckpointResult|StoreItemInterface
+     */
+    public function find($id)
+    {
+        return $this->_find($id, CheckpointResult::class);
     }
 
     /**
      * @param array $searchData
-     * @return Member[]
+     * @return CheckpointResult[]
      */
     public function findBy(array $searchData)
     {
@@ -25,26 +34,14 @@ class MemberRepository extends BaseRepository
         if (!empty($searchData['competitionId'])) {
             $filter['competitionId'] = $searchData['competitionId'];
         }
-        if (!empty($searchData['tags'])) {
-            $filter['tags']['$in'] = $searchData['tags'];
+        if (!empty($searchData['checkpointIds'])) {
+            $filter['checkpointId']['$in'] = $searchData['checkpointIds'];
         }
-        if (!empty($searchData['number'])) {
-            $filter['number'] = $searchData['number'];
+        if (!empty($searchData['memberId'])) {
+            $filter['memberId'] = $searchData['memberId'];
         }
-        //todo поиск по info
-
-
         $cursor = $this->collection->find($filter, ['typeMap' => $this->getTypeMap()]);
 
-        return $this->handleCursorResult($cursor, Member::class);
-    }
-
-    /**
-     * @param string $id
-     * @return Member|StoreItemInterface
-     */
-    public function find($id)
-    {
-        return $this->_find($id, Member::class);
+        return $this->handleCursorResult($cursor, CheckpointResult::class);
     }
 }

@@ -52,32 +52,14 @@ class AccessCodeRepository extends BaseRepository
     {
         $cursor = $this->collection->find(['used' => false], ['limit' => $count, 'typeMap' => $this->getTypeMap()]);
 
-        $rows = $cursor->toArray();
-
-        $result = [];
-        foreach ($rows as $row) {
-            $result[] = AccessCode::restore($row);
-        }
-
-        return $result;
+        return $this->handleCursorResult($cursor, AccessCode::class);
     }
 
     public function findByCompetition($competitionId)
     {
         $cursor = $this->collection->find(['competitionId' => $competitionId], ['typeMap' => $this->getTypeMap()]);
 
-        if (empty($cursor)) {
-            return [];
-        }
-
-        $rows = $cursor->toArray();
-
-        $result = [];
-        foreach ($rows as $row) {
-            $result[] = AccessCode::restore($row);
-        }
-
-        return $result;
+        return $this->handleCursorResult($cursor, AccessCode::class);
 
     }
 

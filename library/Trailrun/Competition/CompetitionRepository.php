@@ -6,6 +6,7 @@
 namespace Fightmaster\Trailrun\Competition;
 
 use Fightmaster\Trailrun\Database\MongoDB\BaseRepository;
+use Fightmaster\Trailrun\StoreItemInterface;
 
 class CompetitionRepository extends BaseRepository
 {
@@ -18,29 +19,15 @@ class CompetitionRepository extends BaseRepository
     {
         $cursor = $this->collection->find([], ['typeMap' => $this->getTypeMap()]);
 
-        if (empty($cursor)) {
-            return [];
-        }
-
-        $rows = $cursor->toArray();
-
-        $result = [];
-        foreach ($rows as $row) {
-            $result[] = Competition::restore($row);
-        }
-
-        return $result;
+        return $this->handleCursorResult($cursor, Competition::class);
     }
 
+    /**
+     * @param string $id
+     * @return Competition|StoreItemInterface
+     */
     public function find($id)
     {
-        $row = $this->collection->findOne(['_id' => $id], ['typeMap' => $this->getTypeMap()]);
-
-        if (empty($row)) {
-            return null;
-        }
-
-        return Competition::restore($row);
-
+        return $this->_find($id, Competition::class);
     }
 }

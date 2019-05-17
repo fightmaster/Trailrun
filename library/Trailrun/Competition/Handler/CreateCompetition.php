@@ -34,8 +34,8 @@ class CreateCompetition
 
     public function handle($data)
     {
-        $data['tags'] = isset($data['tags']) ? $data['tags'] : [];
-        $data['checkpoints'] = isset($data['checkpoints']) ? $data['checkpoints'] : [];
+        $data['tags'] = !empty($data['tags']) ? $data['tags'] : [];
+        $data['checkpoints'] = !empty($data['checkpoints']) ? $data['checkpoints'] : [];
         $competition = Competition::create($data);
 
         $accessCodes = $this->accessCodeRepository->invokeCodes($competition->getId(), AccessList::getAccessList());

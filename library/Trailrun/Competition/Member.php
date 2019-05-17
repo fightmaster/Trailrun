@@ -37,12 +37,24 @@ class Member implements StoreItemInterface
         $member->competitionId = $data['competitionId'];
         $member->info['firstName'] = $data['firstName'];
         $member->info['lastName'] = $data['lastName'];
+        if (!empty($data['dob'])) {
+            $member->info['dob'] = $data['dob'];
+        }
         if (!empty($data['clubName'])) {
             $member->info['clubName'] = $data['clubName'];
         }
 
         if (!empty($data['city'])) {
             $member->info['city'] = $data['city'];
+        }
+        if (!empty($data['gender'])) {
+            $member->info['gender'] = $data['gender'];
+        }
+        if (!empty($data['phone'])) {
+            $member->info['phone'] = $data['phone'];
+        }
+        if (!empty($data['email'])) {
+            $member->info['email'] = $data['email'];
         }
 
         $member->tags = $data['tags'];
@@ -67,11 +79,20 @@ class Member implements StoreItemInterface
         if (!empty($data['dob'])) {
             $this->info['dob'] = $data['dob'];
         }
-        if (!empty($data['city'])) {
+        if (!empty($data['clubName'])) {
             $this->info['clubName'] = $data['clubName'];
         }
         if (!empty($data['city'])) {
             $this->info['city'] = $data['city'];
+        }
+        if (!empty($data['gender'])) {
+            $this->info['gender'] = $data['gender'];
+        }
+        if (!empty($data['phone'])) {
+            $this->info['phone'] = $data['phone'];
+        }
+        if (!empty($data['email'])) {
+            $this->info['email'] = $data['email'];
         }
     }
 

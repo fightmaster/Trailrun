@@ -15,7 +15,7 @@ class AccessCodeRepositoryTest extends TrailrunTestCase
 {
     use AccessCodeTrait;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

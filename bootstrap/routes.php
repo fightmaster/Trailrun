@@ -127,3 +127,10 @@ $app->get('/competitions/{competitionId}/members/create/', function (Request $re
         [],
     ]);
 });
+
+$app->get('/competitions/{competitionId}/members/', function (Request $request, Response $response) {
+
+    return $this->view->render($response, '/members/list.html', [
+        [],
+    ]);
+});
