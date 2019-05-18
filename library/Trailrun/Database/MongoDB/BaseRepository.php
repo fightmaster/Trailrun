@@ -57,12 +57,38 @@ abstract class BaseRepository
         return $this->collection->insertMany($objects);
     }
 
+    /**
+     * @param StoreItemInterface $object
+     * @return \MongoDB\UpdateResult
+     */
     public function update(StoreItemInterface $object)
     {
-        $this->collection->updateOne(['_id' => $object->getId()], ['$set' => $object->toStoreArray()]);
+        return $this->collection->updateOne(['_id' => $object->getId()], ['$set' => $object->toStoreArray()]);
     }
 
-    public function exist($id)
+    /**
+     * @param StoreItemInterface $object
+     * @return \MongoDB\DeleteResult
+     */
+    public function delete(StoreItemInterface $object)
+    {
+        return $this->collection->deleteOne(['_id' => $object->getId()]);
+    }
+
+    /**
+     * @param array $filter
+     * @return \MongoDB\DeleteResult
+     */
+    public function deleteCollection(array $filter)
+    {
+        return $this->collection->deleteMany($filter);
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function exist($id): bool
     {
         return !empty($this->collection->findOne(['_id' => $id]));
     }
@@ -96,7 +122,7 @@ abstract class BaseRepository
     /**
      * @param string $id
      * @param string $findItemClass
-     * @return StoreItemInterface
+     * @return StoreItemInterface|null
      */
     protected function _find(string $id, string $findItemClass)
     {

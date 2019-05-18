@@ -39,6 +39,11 @@ class MemberRepository extends BaseRepository
         return $this->handleCursorResult($cursor, Member::class);
     }
 
+    public function deleteByCompetitionId($competitionId)
+    {
+        return $this->deleteCollection(['competitionId' => $competitionId]);
+    }
+
     /**
      * @param string $id
      * @return Member|StoreItemInterface

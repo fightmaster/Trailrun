@@ -27,8 +27,9 @@ class Member implements StoreItemInterface
     }
 
     /**
-     * @param array $data
+     * @param $data
      * @return Member
+     * @throws \Exception
      */
     public static function create($data)
     {
@@ -207,5 +208,10 @@ class Member implements StoreItemInterface
     public function getClubName()
     {
         return !empty($this->info['clubName']) ? $this->info['clubName'] : null;
+    }
+
+    public function getDob()
+    {
+        return !empty($this->info['dob']) ? $this->info['dob'] : null;
     }
 }

@@ -116,21 +116,32 @@ $app->get('/competitions/{competitionId}/view/', function (Request $request, Res
 
 
 $app->get('/competitions/create/', function (Request $request, Response $response) {
-
     return $this->view->render($response, '/competitions/create.html', [
         [],
     ]);
 });
 $app->get('/competitions/{competitionId}/members/create/', function (Request $request, Response $response) {
-
     return $this->view->render($response, '/members/create.html', [
         [],
     ]);
 });
-
-$app->get('/competitions/{competitionId}/members/', function (Request $request, Response $response) {
-
-    return $this->view->render($response, '/members/list.html', [
+$app->get('/competitions/{competitionId}/members/{memberId}/edit/', function (Request $request, Response $response) {
+    return $this->view->render($response, '/members/edit.html', [
         [],
     ]);
+})->setName('editMember');
+
+$app->delete('/competitions/{competitionId}/members/{memberId}/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\DeleteMember $deleteMember */
+    $deleteMember = $container[\Fightmaster\Trailrun\Competition\Handler\DeleteMember::class];
+    $deleteMember->handle($args['competitionId'], $args['memberId']);
+
+    return $response->withStatus(204);
+})->setName('deleteMember');
+
+$app->get('/competitions/{competitionId}/members/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\ListMembers $listMembers */
+    $listMembers = $container[\Fightmaster\Trailrun\Competition\Handler\ListMembers::class];
+
+    return $this->view->render($response, '/members/list.html', $listMembers->handle($args['competitionId']));
 });

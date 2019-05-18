@@ -78,6 +78,29 @@ $container[\Fightmaster\Trailrun\Competition\Handler\CreateMember::class] = func
         $container[\Fightmaster\Trailrun\Competition\MemberRepository::class]
     );
 };
+$container[\Fightmaster\Trailrun\Competition\Handler\EditMember::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\EditMember(
+        $container[\Fightmaster\Trailrun\Competition\MemberRepository::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\DeleteMember::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\DeleteMember(
+        $container[\Fightmaster\Trailrun\Competition\MemberRepository::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\ListMembers::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\ListMembers(
+        $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\MemberRepository::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\ImportMembers::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\ImportMembers(
+        $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\MemberRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class]
+    );
+};
 
 $container[\MongoDB\Driver\BulkWrite::class] = function ($container) {
     return new MongoDB\Driver\BulkWrite();
