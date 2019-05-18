@@ -2,32 +2,75 @@
 
 {% block body %}
 <div class="page-header">
-    <h1>Добавление участника соревнования</h1>
+    <h1>Добавление участника соревнования {{competition.name}}</h1>
 </div>
 
-<form class="form-horizontal" id="competition">
+<form class="form-horizontal" id="member">
+    <input type="hidden" id="competitionId" name="competitionId" value="{{competition.id}}">
     <div class="form-group">
-        <label for="name" class="col-sm-2 control-label ">Соревнование:</label>
+        <label for="lastName" class="col-sm-2 control-label ">Фамилия:</label>
         <div class="col-sm-10">
-            <input type="text" name="" class="form-control" id="name" placeholder="Название Соревнования" required="required">
+            <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Фамилия" required="required">
         </div>
     </div>
     <div class="form-group">
-        <label for="startTime" class="col-sm-2 control-label ">Дата начала:</label>
-        <div class="col-sm-3">
-            <input type="text" name="startTime" class="form-control" id="startTime" placeholder="2017-04-17 17:00:00" required="required">
+        <label for="firstName" class="col-sm-2 control-label ">Имя:</label>
+        <div class="col-sm-10">
+            <input type="text" name="firstName" class="form-control" id="firstName" placeholder="Имя" required="required">
         </div>
-        <label for="startTime" class="col-sm-2 control-label ">Дата завершения:</label>
+    </div>
+    <div class="form-group">
+        <label for="dob" class="col-sm-2 control-label ">Дата рождения:</label>
         <div class="col-sm-3">
-            <input type="text" name="endTime" class="form-control" id="endTime" placeholder="2017-04-17 20:00:00" required="required">
+            <input type="text" name="dob" class="form-control" id="dob" placeholder="2000-01-01">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="number" class="col-sm-2 control-label ">Номер:</label>
+        <div class="col-sm-10">
+            <input type="number" name="number" class="form-control" id="number" placeholder="Номер">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="city" class="col-sm-2 control-label ">Город:</label>
+        <div class="col-sm-10">
+            <input type="text" name="city" class="form-control" id="city" placeholder="Город">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="clubName" class="col-sm-2 control-label ">Клуб:</label>
+        <div class="col-sm-10">
+            <input type="text" name="clubName" class="form-control" id="clubName" placeholder="Клуб">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="gender" class="col-sm-2 control-label ">Пол:</label>
+        <div class="col-sm-10">
+            <select name="gender" class="form-control" id="gender">
+                <option value="1">Мужской</option>
+                <option value="2">Женский</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="phone" class="col-sm-2 control-label ">Телефон:</label>
+        <div class="col-sm-10">
+            <input type="text" name="phone" class="form-control" id="phone" placeholder="Телефон">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email" class="col-sm-2 control-label ">Email:</label>
+        <div class="col-sm-10">
+            <input type="email" name="email" class="form-control" id="email" placeholder="Email">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Теги:</label>
         <div class="col-sm-10">
-            {% for k in 0..9 %}
-            <div class="col-sm-5">
-                <input type="text" name="tags[]" class="form-control" placeholder="Тег">
+            {% for key, tag in competition.tags %}
+            <label for="tags{{key}}" class="col-sm-4 control-label ">{{tag}}:</label>
+            <div class="col-sm-1">
+                <input type="checkbox" id="tags{{key}}" name="tags[]" class="form-control" value="{{tag}}">
             </div>
             {% endfor %}
         </div>
@@ -46,14 +89,14 @@
 <script>
     function parseISOLocal(s) {
         var b = s.split(/\D/);
-        return new Date(b[0], b[1]-1, b[2], b[3], b[4], b[5]);
+        return new Date(b[0], b[1]-1, b[2]);
     }
     $(function() { // on document load
-        $('#competition').submit(function () {
+        $('#member').submit(function () {
 
-            var data = $('#competition').serializeJSON();
-            data.startTime = parseISOLocal(data.startTime).getTime() / 1000;
-            data.endTime = parseISOLocal(data.endTime).getTime() / 1000;
+            var data = $('#member').serializeJSON();
+            // var dob = parseISOLocal(data.dob);
+            // data.dob = dob.getFullYear() + '-' + dob.getM() + '-' + dob.getDate();
             var jsonData = JSON.stringify(data);
             $.ajax({
                 url: '/api/members/',
@@ -63,7 +106,7 @@
                 async: true,
                 success: function (data) { // callback method for further manipulations
                     console.log(data);
-                    location.href = '/competitions/' + data.id + '/members/';
+                    location.href = '/competitions/' + data.competitionId + '/members/';
                 },
                 error: function (data) { // if error occured
                     alert('error');

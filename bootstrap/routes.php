@@ -31,7 +31,7 @@ $app->post('/api/competitions/', function (Request $request, Response $response,
     try {
         $created = $createCompetition->handle($data);
         $response->getBody()->write(
-            json_encode($created)
+            json_encode($created->toArray())
         );
         return;
     } catch (\InvalidArgumentException $e) {
@@ -47,7 +47,7 @@ $app->put('/api/competitions/{competitionId}/', function (Request $request, Resp
     try {
         $created = $editCompetition->handle($data);
         $response->getBody()->write(
-            json_encode($created)
+            json_encode($created->toArray())
         );
         return;
     } catch (\InvalidArgumentException $e) {
@@ -65,7 +65,7 @@ $app->post('/api/members/', function (Request $request, Response $response, $arg
     try {
         $created = $createMember->handle($data);
         $response->getBody()->write(
-            json_encode($created)
+            json_encode($created->toArray())
         );
         return;
     } catch (\InvalidArgumentException $e) {
@@ -120,9 +120,12 @@ $app->get('/competitions/create/', function (Request $request, Response $respons
         [],
     ]);
 });
-$app->get('/competitions/{competitionId}/members/create/', function (Request $request, Response $response) {
+$app->get('/competitions/{competitionId}/members/create/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\ViewCompetition $viewCompetition */
+    $viewCompetition = $container[\Fightmaster\Trailrun\Competition\Handler\ViewCompetition::class];
+
     return $this->view->render($response, '/members/create.html', [
-        [],
+        'competition' => $viewCompetition->handle($args['competitionId'])
     ]);
 });
 $app->get('/competitions/{competitionId}/members/{memberId}/edit/', function (Request $request, Response $response) {

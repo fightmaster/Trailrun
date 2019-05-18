@@ -6,9 +6,9 @@
 </div>
 
 <div class="table-responsive">
-    <table class="table table-condensed">
+    <table class="table table-bordered table-condensed">
         {% for member in members %}
-        <tr {% if member.number is defined %}class="active"{% endif %}>
+        <tr {% if member.number is not null %}class="success"{% endif %}>
             <td>{{member.number}}</td>
             <td><a href="{{ path_for('editMember', { 'competitionId': competition.id, 'memberId': member.id }) }}">{{member.lastName}} {{member.firstName}}</a></td>
             <td>{{member.clubName}}</td>

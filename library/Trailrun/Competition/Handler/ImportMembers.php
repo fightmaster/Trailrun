@@ -74,7 +74,11 @@ class ImportMembers
                     }
                 } else {
                     if (!empty($row[$column])) {
-                        $memberData[$key] = $row[$column];
+                        if ($key == 'gender') {
+                            $memberData[$key] = $this->parseGender($row[$column]);
+                        } else {
+                            $memberData[$key] = $row[$column];
+                        }
                     }
                 }
             }
@@ -82,6 +86,27 @@ class ImportMembers
         }
 
         return $this->memberRepository->insertCollection($members);
+    }
+
+    /**
+     * @param $gender
+     * @return int|null
+     */
+    private function parseGender($gender):? int
+    {
+        switch ($gender) {
+            case 1:
+            case 'Мужской':
+                return 1;
+                break;
+            case 2:
+            case 'Женский':
+                return 2;
+                break;
+            default:
+                return null;
+                break;
+        }
     }
 
     /**
