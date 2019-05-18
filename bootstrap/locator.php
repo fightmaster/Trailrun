@@ -108,6 +108,28 @@ $container[\Fightmaster\Trailrun\Competition\Handler\ImportMembers::class] = fun
     );
 };
 
+
+//CheckpointResult
+$container[\Fightmaster\Trailrun\Competition\Handler\DeleteCheckpointResult::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\DeleteCheckpointResult(
+        $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult(
+        $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\MemberRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\CheckpointResults::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\CheckpointResults(
+        $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\MemberRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class]
+    );
+};
+
 $container[\MongoDB\Driver\BulkWrite::class] = function ($container) {
     return new MongoDB\Driver\BulkWrite();
 };

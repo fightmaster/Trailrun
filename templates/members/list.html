@@ -4,19 +4,24 @@
 <div class="page-header">
     <h1>Участники соревнования {{competition.name}}</h1>
 </div>
+<div class="table-responsive">
+    <div class="col-sm-8 col-lg-8" id="breadcrumbs">
+        {% include 'links.html' with {competition: competition} only %}
+    </div>
+</div>
 <a href="{{ path_for('createMember', {'competitionId': competition.id}) }}">Добавить участника</a><br><br>
 <div class="table-responsive">
     <table class="table table-bordered table-condensed">
         {% for member in members %}
         <tr {% if member.number is not null %}class="success"{% endif %}>
             <td>{{member.number}}</td>
-            <td><a href="{{ path_for('editMember', { 'competitionId': competition.id, 'memberId': member.id }) }}">{{member.lastName}} {{member.firstName}}</a></td>
+            <td><a href="{{ path_for('editMember', { 'competitionId': competition.id, 'memberId': member.id }) }}" title="Редактировать">{{member.lastName}} {{member.firstName}}</a></td>
             <td>{{member.clubName}}</td>
             <td>{{member.city}}</td>
             <td>{{member.dob}}</td>
             <td>{{member.tags|join(' | ')}}</td>
             <td width="100px">{{member.registrationDate}}</td>
-            <td class="danger"><a href="#" onclick='removeItem("{{competition.id}}", "{{member.id}}"); return false;'>X</a></td>
+            <td class="danger"><a href="#" onclick='removeItem("{{competition.id}}", "{{member.id}}"); return false;' title="Удалить">X</a></td>
         </tr>
         {% endfor %}
     </table>

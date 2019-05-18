@@ -1,0 +1,11 @@
+<h3>Последние добавленные</h3>
+<table class="table table-bordered table-condensed">
+    {% for checkpointResult in checkpointResults %}
+    {% set currentMember = members[checkpointResult.memberId] %}
+    <tr>
+        <td>{{ currentMember.number }}</td>
+        <td>{{currentMember.lastName}} {{currentMember.firstName}}</td>
+        <td>{{checkpointResult.getFormattedTime}}</td>
+    </tr>
+    {% endfor %}
+</table>

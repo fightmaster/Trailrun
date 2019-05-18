@@ -100,6 +100,31 @@ class CheckpointResult implements StoreItemInterface
     }
 
     /**
+     * @return string
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param string $format
+     * @return false|string
+     */
+    public function getFormattedTime($format = 'H:i:s')
+    {
+        return date($format, $this->time);
+    }
+    /**
+     * @param string $format
+     * @return false|string
+     */
+    public function getDiffTime($time)
+    {
+        return date('H:i:s', $this->time - $time);
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array

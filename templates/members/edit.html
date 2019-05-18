@@ -4,6 +4,11 @@
 <div class="page-header">
     <h1>Редактирование участника соревнования {{competition.name}}</h1>
 </div>
+<div class="table-responsive">
+    <div class="col-sm-8 col-lg-8" id="breadcrumbs">
+        {% include 'links.html' with {competition: competition} only %}
+    </div>
+</div>
 
 <form class="form-horizontal" id="member">
     <input type="hidden" name="competitionId" class="form-control" value="{{competition.id}}" required="required">

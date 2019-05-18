@@ -25,8 +25,11 @@ class MemberRepository extends BaseRepository
         if (!empty($searchData['competitionId'])) {
             $filter['competitionId'] = $searchData['competitionId'];
         }
-        if (!empty($searchData['tags'])) {
-            $filter['tags']['$in'] = $searchData['tags'];
+        if (!empty($searchData['allTags'])) {
+            $filter['tags']['$all'] = $searchData['allTags'];
+        }
+        if (!empty($searchData['inTags'])) {
+            $filter['tags']['$in'] = $searchData['inTags'];
         }
         if (!empty($searchData['number'])) {
             $filter['number'] = $searchData['number'];

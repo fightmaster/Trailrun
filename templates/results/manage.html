@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Ввод результатов {{competition.name}}</h1>
+</div>
+<div class="table-responsive">
+    <div class="col-sm-8 col-lg-8" id="breadcrumbs">
+        {% include 'links.html' with {competition: competition} only %}
+    </div>
+</div>
+<div class="table-responsive">
+    <div class="col-sm-4 col-lg-4" id="input_field">
+
+        <form class="form-horizontal" id="start1">
+            <input type="hidden" name="competitionId" value="{{ competition.id }}">
+            <input type="submit" value="Старт 1">
+        </form>
+        <br>
+        <form class="form-horizontal" id="start2">
+            <input type="hidden" name="competitionId" value="{{ competition.id }}">
+            <input type="submit" value="Старт 2">
+        </form>
+
+        <br><br>
+        <form class="form-horizontal" id="number">
+            <input type="hidden" name="competitionId" value="{{ competition.id }}">
+            <label for="number">Введите номер:</label>
+            <input type="text" id="memberNumber" name="number" value="">
+        </form>
+    </div>
+    <div class="table-responsive">
+        <div class="col-sm-8 col-lg-8" id="last-results" style="height: 150px">
+            {% include 'results/last_results.html' with {checkpointResults: lastResults.checkpointResults, members: lastResults.members} only %}
+        </div>
+    </div>
+    <div class="table-responsive">
+        <div class="col-sm-8 col-lg-8" id="results">
+            {% include 'results/list.html' with {competition: competition, results: allResults.results, members: allResults.members} only %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_js %}
+
+<script src="/js/jquery.serializejson.min.js"></script>
+<script>
+    $(function() { // on document load
+        $('#number').submit(function () {
+            var data = $('#number').serializeJSON();
+            var jsonData = JSON.stringify(data);
+            $.ajax({
+                url: '/api/competitions/{{competition.id}}/checkpoint-results/',
+                data: jsonData,
+                dataType: 'json',
+                type: 'POST',
+                async: true,
+                success: function (data) { // callback method for further manipulations
+                    $number = $('#memberNumber');
+                    $number.focus();
+                    $number.val();
+                    updateLastResults();
+                },
+                error: function (data) { // if error occured
+                    alert('error');
+                }
+            });
+            return false;
+        });
+
+        $('#start1').submit(function () {
+            var data = $('#start1').serializeJSON();
+            var jsonData = JSON.stringify(data);
+            $.ajax({
+                url: '/api/competitions/{{competition.id}}/start-1/',
+                data: jsonData,
+                type: 'POST',
+                async: true,
+                success: function (data) { // callback method for further manipulations
+                    $number = $('#memberNumber');
+                    $number.focus();
+                    $number.val();
+                    updateLastResults();
+                },
+                error: function (data) { // if error occured
+                    alert('error');
+                }
+            });
+            return false;
+        });
+
+        $('#start2').submit(function () {
+            var data = $('#start2').serializeJSON();
+            var jsonData = JSON.stringify(data);
+            $.ajax({
+                url: '/api/competitions/{{competition.id}}/start-2/',
+                data: jsonData,
+                type: 'POST',
+                async: true,
+                success: function (data) { // callback method for further manipulations
+                    $number = $('#memberNumber');
+                    $number.focus();
+                    $number.val();
+                    updateLastResults();
+                },
+                error: function (data) { // if error occured
+                    alert('error');
+                }
+            });
+            return false;
+        });
+
+
+        function removeItem(competitionId, memberId) {
+            $.ajax({
+                url: '/api/competitions/' + competitionId + '/members/' + memberId + '/',
+                data: {},
+                dataType: 'json',
+                type: 'DELETE',
+                async: true,
+                success: function (data) { // callback method for further manipulations
+                    console.log(data);
+                    location.href = '/competitions/' + competitionId + '/members/';
+                },
+                error: function (data) { // if error occured
+                    alert('error');
+                }
+            });
+            return false;
+        }
+
+        setInterval("updateLastResults();",60000);
+        function updateLastResults(){
+            $.ajax({
+                url: '/competitions/{{competition.id}}/last-results/',
+                dataType: 'html',
+                type: 'GET',
+                async: true,
+                success: function (response) { // callback method for further manipulations
+                    $('#last-results').html(response);
+                },
+                error: function (data) { // if error occured
+                    alert('error');
+                }
+
+            });
+        }
+
+    });
+</script>
+
+{% endblock %}

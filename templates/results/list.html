@@ -1,0 +1,31 @@
+<div class="page-header">
+    <h1>Участники соревнования {{competition.name}}</h1>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed">
+        <tr>
+            <th>#</th>
+            <th>№</th>
+            <th>Участник</th>
+            <th></th>
+        {% for checkpoint in competition.checkpoints %}
+            <th>{{checkpoints.name}}</th>
+        {% endfor %}
+        </tr>
+        {% for memberId, result in results %}
+        {% set currentMember = members[memberId] %}
+        {% set startTime =result.startTime %}
+        <tr {% if member.number is not null %}class="success"{% endif %}>
+            <td>{{ loop.index }}</td>
+            <td>{{currentMember.number}}</td>
+            <td>{{currentMember.lastName}} {{currentMember.firstName}}</td>
+            <td>{{currentMember.tags|join(' | ')}}</td>
+            {% for resultMember in result.results %}
+            <td>{{resultMember.getDiffTime(startTime)}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>

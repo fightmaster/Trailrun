@@ -10,7 +10,7 @@ use \Fightmaster\Trailrun\Competition\Handler\ImportMembers;
 echo PHP_EOL;
 
 $sourceFile = __DIR__ . '/ВКМ 2019.csv';
-$competitionId = '64a232bc-7685-11e9-810c-80e6500c557e';
+$competitionId = '00f1920a-7958-11e9-9af4-80e6500c557e';
 $maps = [
     'number' => 0,
     'firstName' => 4,

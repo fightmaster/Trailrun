@@ -98,6 +98,60 @@ $app->put('/api/competitions/{competitionId}/members/{memberId}/', function (Req
 
 });
 
+$app->post('/api/competitions/{competitionId}/start-1/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult $manageCheckpointResult */
+    $manageCheckpointResult = $container[\Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult::class];
+    try {
+        $manageCheckpointResult->startOne($args['competitionId']);
+        $response->withStatus(200);
+        return;
+    } catch (\InvalidArgumentException $e) {
+        $response->withStatus(400, $e->getMessage());
+        return;
+    }
+})->setName('start-1');
+
+$app->post('/api/competitions/{competitionId}/start-2/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult $manageCheckpointResult */
+    $manageCheckpointResult = $container[\Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult::class];
+    try {
+        $manageCheckpointResult->startTwo($args['competitionId']);
+        $response->withStatus(200);
+        return;
+    } catch (\InvalidArgumentException $e) {
+        $response->withStatus(400, $e->getMessage());
+        return;
+    }
+})->setName('start-2');
+
+$app->post('/api/competitions/{competitionId}/checkpoint-results/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult $manageCheckpointResult */
+    $manageCheckpointResult = $container[\Fightmaster\Trailrun\Competition\Handler\ManageCheckpointResult::class];
+    $data = json_decode($request->getBody(), true);
+    try {
+        $result = $manageCheckpointResult->addByNumber($data);
+        if (empty($result)) {
+            $response->getBody()->write(
+                json_encode(0)
+            );
+            return;
+        }
+        $response->getBody()->write(
+            json_encode($result)
+        );
+        return;
+    } catch (\InvalidArgumentException $e) {
+        return $response->withStatus(400, $e->getMessage());
+    }
+})->setName('addCheckpointResult');
+
+$app->delete('/api/competitions/{competitionId}/checkpoint-results/{checkpointResultId}/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\DeleteCheckpointResult $deleteCheckpointResult */
+    $deleteCheckpointResult = $container[\Fightmaster\Trailrun\Competition\Handler\DeleteCheckpointResult::class];
+    $deleteCheckpointResult->handle($args['competitionId'], $args['checkpointResultId']);
+
+    return $response->withStatus(204);
+})->setName('deleteCheckpointResult');
 
 $app->get('/competitions/', function (Request $request, Response $response, $args) use ($container) {
     /** @var \Fightmaster\Trailrun\Competition\Handler\ListCompetition $listCompetition */
@@ -163,4 +217,35 @@ $app->get('/competitions/{competitionId}/members/', function (Request $request, 
     $listMembers = $container[\Fightmaster\Trailrun\Competition\Handler\ListMembers::class];
 
     return $this->view->render($response, '/members/list.html', $listMembers->handle($args['competitionId']));
-});
+})->setName('competitionsMembers');
+
+$app->get('/competitions/{competitionId}/manage-results/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\ViewCompetition $viewCompetition */
+    $viewCompetition = $container[\Fightmaster\Trailrun\Competition\Handler\ViewCompetition::class];
+
+    /** @var \Fightmaster\Trailrun\Competition\Handler\CheckpointResults $checkpointResults */
+    $checkpointResults = $container[\Fightmaster\Trailrun\Competition\Handler\CheckpointResults::class];
+    $lastResults = $checkpointResults->last($args['competitionId'], 20);
+    $allResults = $checkpointResults->all($args['competitionId'], 20);
+
+    return $this->view->render($response, '/results/manage.html', [
+        'lastResults' => $lastResults,
+        'competition' => $viewCompetition->handle($args['competitionId']),
+        'allResults' => $allResults
+    ]);
+})->setName('competitionManageResults');
+
+$app->get('/competitions/{competitionId}/last-results/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\CheckpointResults $checkpointResults */
+    $checkpointResults = $container[\Fightmaster\Trailrun\Competition\Handler\CheckpointResults::class];
+    $lastResults = $checkpointResults->last($args['competitionId'], 20);
+
+    return $this->view->render($response, '/results/last_results.html', $lastResults);
+})->setName('competitionLastResults');
+
+$app->get('/competitions/{competitionId}/results/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\CheckpointResults $checkpointResults */
+    $checkpointResults = $container[\Fightmaster\Trailrun\Competition\Handler\CheckpointResults::class];
+
+    return $this->view->render($response, '/results/list.html', $checkpointResults->handle($args['competitionId']));
+})->setName('competitionResults');
