@@ -59,9 +59,8 @@ class Member implements StoreItemInterface
         }
 
         $member->tags = $data['tags'];
-        if (!empty($data['number'])) {
-            $member->changeNumber($data['number']);
-        }
+
+        $member->changeNumber($data['number']);
 
         return $member;
     }
@@ -99,6 +98,12 @@ class Member implements StoreItemInterface
 
     public function changeNumber($number)
     {
+        if (empty($number)) {
+            $this->number = null;
+            $this->codeNumber = null;
+
+            return;
+        }
         if ($this->number == $number) {
             return;
         }
@@ -213,5 +218,15 @@ class Member implements StoreItemInterface
     public function getDob()
     {
         return !empty($this->info['dob']) ? $this->info['dob'] : null;
+    }
+
+    public function getPhone()
+    {
+        return !empty($this->info['phone']) ? $this->info['phone'] : null;
+    }
+
+    public function getEmail()
+    {
+        return !empty($this->info['email']) ? $this->info['email'] : null;
     }
 }

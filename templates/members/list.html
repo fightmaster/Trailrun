@@ -4,7 +4,7 @@
 <div class="page-header">
     <h1>Участники соревнования {{competition.name}}</h1>
 </div>
-
+<a href="{{ path_for('createMember', {'competitionId': competition.id}) }}">Добавить участника</a><br><br>
 <div class="table-responsive">
     <table class="table table-bordered table-condensed">
         {% for member in members %}
@@ -26,7 +26,7 @@
 <script>
     function removeItem(competitionId, memberId) {
         $.ajax({
-            url: '/competitions/' + competitionId + '/members/' + memberId + '/',
+            url: '/api/competitions/' + competitionId + '/members/' + memberId + '/',
             data: {},
             dataType: 'json',
             type: 'DELETE',

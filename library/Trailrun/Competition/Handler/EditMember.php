@@ -28,11 +28,12 @@ class EditMember
         $data['tags'] = !empty($data['tags']) ? $data['tags'] : [];
         $updatedTagInfo = $member->alterTags($data['tags']);
         if (!empty($updatedTagInfo['deleted'])) {
+            //nothing restrictions
         }
 
         //check results
         $changeNumberAllowed = true;
-        if ($changeNumberAllowed && !empty($data['number'])) {
+        if ($changeNumberAllowed) {
             $member->changeNumber($data['number']);
         }
 

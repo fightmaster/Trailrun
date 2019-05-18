@@ -56,8 +56,7 @@ $app->put('/api/competitions/{competitionId}/', function (Request $request, Resp
     }
 });
 
-
-$app->post('/api/members/', function (Request $request, Response $response, $args) use ($container) {
+$app->post('/api/competitions/{competitionId}/members/', function (Request $request, Response $response, $args) use ($container) {
     /** @var \Fightmaster\Trailrun\Competition\Handler\CreateMember $createMember */
     $createMember = $container[\Fightmaster\Trailrun\Competition\Handler\CreateMember::class];
 
@@ -74,6 +73,30 @@ $app->post('/api/members/', function (Request $request, Response $response, $arg
     }
 });
 
+$app->delete('/api/competitions/{competitionId}/members/{memberId}/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\DeleteMember $deleteMember */
+    $deleteMember = $container[\Fightmaster\Trailrun\Competition\Handler\DeleteMember::class];
+    $deleteMember->handle($args['competitionId'], $args['memberId']);
+
+    return $response->withStatus(204);
+})->setName('deleteMember');
+
+$app->put('/api/competitions/{competitionId}/members/{memberId}/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\EditMember $editMember */
+    $editMember = $container[\Fightmaster\Trailrun\Competition\Handler\EditMember::class];
+    $data = json_decode($request->getBody(), true);
+    try {
+        $edited = $editMember->handle($data);
+        $response->getBody()->write(
+            json_encode($edited->toArray())
+        );
+        return;
+    } catch (\InvalidArgumentException $e) {
+        $response->withStatus(400, $e->getMessage());
+        return;
+    }
+
+});
 
 
 $app->get('/competitions/', function (Request $request, Response $response, $args) use ($container) {
@@ -127,20 +150,13 @@ $app->get('/competitions/{competitionId}/members/create/', function (Request $re
     return $this->view->render($response, '/members/create.html', [
         'competition' => $viewCompetition->handle($args['competitionId'])
     ]);
-});
-$app->get('/competitions/{competitionId}/members/{memberId}/edit/', function (Request $request, Response $response) {
-    return $this->view->render($response, '/members/edit.html', [
-        [],
-    ]);
+})->setName('createMember');
+$app->get('/competitions/{competitionId}/members/{memberId}/edit/', function (Request $request, Response $response, $args) use ($container) {
+    /** @var \Fightmaster\Trailrun\Competition\Handler\ViewMember $viewMember */
+    $viewMember = $container[\Fightmaster\Trailrun\Competition\Handler\ViewMember::class];
+
+    return $this->view->render($response, '/members/edit.html', $viewMember->handle($args['competitionId'], $args['memberId']));
 })->setName('editMember');
-
-$app->delete('/competitions/{competitionId}/members/{memberId}/', function (Request $request, Response $response, $args) use ($container) {
-    /** @var \Fightmaster\Trailrun\Competition\Handler\DeleteMember $deleteMember */
-    $deleteMember = $container[\Fightmaster\Trailrun\Competition\Handler\DeleteMember::class];
-    $deleteMember->handle($args['competitionId'], $args['memberId']);
-
-    return $response->withStatus(204);
-})->setName('deleteMember');
 
 $app->get('/competitions/{competitionId}/members/', function (Request $request, Response $response, $args) use ($container) {
     /** @var \Fightmaster\Trailrun\Competition\Handler\ListMembers $listMembers */
