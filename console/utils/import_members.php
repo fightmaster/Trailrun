@@ -21,7 +21,8 @@ $maps = [
     'gender' => 6,
     'phone' => 9,
     'email' => 10,
-    'tags' => [1, 2]
+    'tags' => [1, 2],
+    'registrationDate' => 12
 ];
 /** @var ImportMembers $import */
 $import = $container[ImportMembers::class];

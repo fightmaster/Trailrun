@@ -57,10 +57,15 @@ class Member implements StoreItemInterface
         if (!empty($data['email'])) {
             $member->info['email'] = $data['email'];
         }
+        if (!empty($data['registrationDate'])) {
+            $member->info['registrationDate'] = $data['registrationDate'];
+        }
 
         $member->tags = $data['tags'];
 
-        $member->changeNumber($data['number']);
+        if (!empty($data['number'])) {
+            $member->changeNumber($data['number']);
+        }
 
         return $member;
     }
@@ -93,6 +98,9 @@ class Member implements StoreItemInterface
         }
         if (!empty($data['email'])) {
             $this->info['email'] = $data['email'];
+        }
+        if (!empty($data['registrationDate'])) {
+            $this->info['registrationDate'] = $data['registrationDate'];
         }
     }
 
@@ -228,5 +236,10 @@ class Member implements StoreItemInterface
     public function getEmail()
     {
         return !empty($this->info['email']) ? $this->info['email'] : null;
+    }
+
+    public function getRegistrationDate()
+    {
+        return !empty($this->info['registrationDate']) ? $this->info['registrationDate'] : null;
     }
 }

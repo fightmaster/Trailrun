@@ -15,6 +15,7 @@
             <td>{{member.city}}</td>
             <td>{{member.dob}}</td>
             <td>{{member.tags|join(' | ')}}</td>
+            <td width="100px">{{member.registrationDate}}</td>
             <td class="danger"><a href="#" onclick='removeItem("{{competition.id}}", "{{member.id}}"); return false;'>X</a></td>
         </tr>
         {% endfor %}
