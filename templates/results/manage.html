@@ -43,9 +43,42 @@
 {% endblock %}
 
 {% block page_js %}
-
 <script src="/js/jquery.serializejson.min.js"></script>
 <script>
+    function removeItem(competitionId, checkPointResultId) {
+        $.ajax({
+            url: '/api/competitions/' + competitionId + '/checkpoint-results/' + checkPointResultId + '/',
+            data: {},
+            dataType: 'json',
+            type: 'DELETE',
+            async: true,
+        }).always(function() {
+            success();
+        });
+        return false;
+    }
+
+    function success() {
+        var $number = $('#memberNumber');
+        $number.focus();
+        $number.val('');
+        updateLastResults();
+    }
+    function updateLastResults(){
+        $.ajax({
+            url: '/competitions/{{competition.id}}/last-results/',
+            dataType: 'html',
+            type: 'GET',
+            async: true,
+            success: function (response) { // callback method for further manipulations
+                $('#last-results').html(response);
+            },
+            error: function (data) { // if error occured
+                alert('error');
+            }
+
+        })
+    }
     $(function() { // on document load
         $('#number').submit(function () {
             var data = $('#number').serializeJSON();
@@ -56,16 +89,13 @@
                 dataType: 'json',
                 type: 'POST',
                 async: true,
-                success: function (data) { // callback method for further manipulations
-                    $number = $('#memberNumber');
-                    $number.focus();
-                    $number.val();
-                    updateLastResults();
-                },
                 error: function (data) { // if error occured
                     alert('error');
                 }
+            }).always(function() {
+                success();
             });
+
             return false;
         });
 
@@ -77,16 +107,13 @@
                 data: jsonData,
                 type: 'POST',
                 async: true,
-                success: function (data) { // callback method for further manipulations
-                    $number = $('#memberNumber');
-                    $number.focus();
-                    $number.val();
-                    updateLastResults();
-                },
                 error: function (data) { // if error occured
                     alert('error');
                 }
+            }).always(function() {
+                success();
             });
+
             return false;
         });
 
@@ -98,55 +125,18 @@
                 data: jsonData,
                 type: 'POST',
                 async: true,
-                success: function (data) { // callback method for further manipulations
-                    $number = $('#memberNumber');
-                    $number.focus();
-                    $number.val();
-                    updateLastResults();
-                },
+                success: success(),
                 error: function (data) { // if error occured
                     alert('error');
                 }
+            }).always(function() {
+                success();
             });
+
             return false;
         });
 
-
-        function removeItem(competitionId, memberId) {
-            $.ajax({
-                url: '/api/competitions/' + competitionId + '/members/' + memberId + '/',
-                data: {},
-                dataType: 'json',
-                type: 'DELETE',
-                async: true,
-                success: function (data) { // callback method for further manipulations
-                    console.log(data);
-                    location.href = '/competitions/' + competitionId + '/members/';
-                },
-                error: function (data) { // if error occured
-                    alert('error');
-                }
-            });
-            return false;
-        }
-
         setInterval("updateLastResults();",60000);
-        function updateLastResults(){
-            $.ajax({
-                url: '/competitions/{{competition.id}}/last-results/',
-                dataType: 'html',
-                type: 'GET',
-                async: true,
-                success: function (response) { // callback method for further manipulations
-                    $('#last-results').html(response);
-                },
-                error: function (data) { // if error occured
-                    alert('error');
-                }
-
-            });
-        }
-
     });
 </script>
 

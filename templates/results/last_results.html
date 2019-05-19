@@ -3,9 +3,10 @@
     {% for checkpointResult in checkpointResults %}
     {% set currentMember = members[checkpointResult.memberId] %}
     <tr>
-        <td>{{ currentMember.number }}</td>
+        <td class="text-center">{{ currentMember.number }}</td>
         <td>{{currentMember.lastName}} {{currentMember.firstName}}</td>
-        <td>{{checkpointResult.getFormattedTime}}</td>
+        <td class="text-center">{{checkpointResult.getFormattedTime}}</td>
+        <td class="text-center"><a href="#" onclick='removeItem("{{checkpointResult.competitionId}}", "{{checkpointResult.id}}"); return false;' title="Удалить"><span class="glyphicon glyphicon-remove text-danger"></span></a></td>
     </tr>
     {% endfor %}
 </table>

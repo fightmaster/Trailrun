@@ -1,7 +1,6 @@
 <div class="page-header">
-    <h1>Участники соревнования {{competition.name}}</h1>
+    <h3>Участники соревнования {{competition.name}}</h3>
 </div>
-
 
 <div class="table-responsive">
     <table class="table table-bordered table-condensed">
@@ -11,19 +10,25 @@
             <th>Участник</th>
             <th></th>
         {% for checkpoint in competition.checkpoints %}
-            <th>{{checkpoints.name}}</th>
+            <th>{{checkpoint.name}}</th>
         {% endfor %}
         </tr>
+
         {% for memberId, result in results %}
         {% set currentMember = members[memberId] %}
         {% set startTime =result.startTime %}
+        {% set previousTime =result.startTime %}
         <tr {% if member.number is not null %}class="success"{% endif %}>
             <td>{{ loop.index }}</td>
             <td>{{currentMember.number}}</td>
             <td>{{currentMember.lastName}} {{currentMember.firstName}}</td>
             <td>{{currentMember.tags|join(' | ')}}</td>
             {% for resultMember in result.results %}
-            <td>{{resultMember.getDiffTime(startTime)}}</td>
+            <td>
+                {{resultMember.getDiffTime(startTime)}} ({{resultMember.getDiffTime(previousTime)}})
+                <a href="#" onclick='removeItem("{{resultMember.competitionId}}", "{{resultMember.id}}"); return false;' title="Удалить"><span class="glyphicon glyphicon-remove text-danger"></span></a>
+            </td>
+            {% set previousTime =resultMember.getTime %}
             {% endfor %}
         </tr>
         {% endfor %}
