@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Редактирование времени</h1>
+</div>
+<div class="table-responsive">
+    <div class="col-sm-8 col-lg-8" id="breadcrumbs">
+        {% include 'links.html' with {competition: competition} only %}
+    </div>
+</div>
+<div class="table-responsive">
+    <div class="col-sm-4 col-lg-4" id="input_field">
+        <p>{{member.lastName}} {{member.firstName}}</p>
+        <p>Старт: {{startCheckpointResult.getFormattedTime('Y-m-d H:i:s')}}</p>
+        <p>Текущее значение результата: {{checkpointResult.getFormattedTime('Y-m-d H:i:s')}}</p>
+        <p>Время от старта: {{checkpointResult.getDiffTime(startCheckpointResult.time)}}</p>
+        <form class="form-horizontal" id="checkpoint_result">
+            <input type="hidden" name="competitionId" value="{{ competition.id }}">
+            <input type="hidden" name="id" value="{{ checkpointResult.id }}">
+            <label for="clearTime">{{member.lastName}} {{member.firstName}}:</label>
+<!--            <input type="text" id="time" name="time" value="{{checkpointResult.getFormattedTime('Y-m-d H:i:s')}}">-->
+            <input type="text" id="clearTime" name="clearTime" value="{{checkpointResult.getDiffTime(startCheckpointResult.time)}}">
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_js %}
+<script src="/js/jquery.serializejson.min.js"></script>
+<script>
+    function parseISOLocal(s) {
+        var b = s.split(/\D/);
+        return new Date(b[0], b[1]-1, b[2], b[3], b[4], b[5]);
+    }
+    function convertClearTime(s) {
+        var b = s.split(/\D/);
+
+        return parseInt(b[0]) * 3600 + parseInt(b[1]) * 60 + parseInt(b[2]);
+    }
+    $(function() { // on document load
+        $('#checkpoint_result').submit(function () {
+            var data = $('#checkpoint_result').serializeJSON();
+            data.clearTime = convertClearTime(data.clearTime);
+            // data.time = parseISOLocal(data.time).getTime() / 1000;
+            var jsonData = JSON.stringify(data);
+            $.ajax({
+                url: '/api/competitions/{{competition.id}}/checkpoint-results/{checkpointResultId}/',
+                data: jsonData,
+                dataType: 'json',
+                type: 'PUT',
+                async: true,
+                success: function (data) {
+                    location.href = '/competitions/{{competition.Id}}/manage-results/';
+                },
+                error: function (data) { // if error occured
+                    alert('error');
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+
+{% endblock %}

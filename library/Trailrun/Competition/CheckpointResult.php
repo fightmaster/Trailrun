@@ -67,7 +67,15 @@ class CheckpointResult implements StoreItemInterface
 
     public function edit($data)
     {
-
+        if (isset($data['checkpointId']) && $data['checkpointId'] !== $this->checkpointId) {
+            $this->checkpointId = $data['checkpointId'];
+        }
+        if (isset($data['memberId']) && $data['memberId'] !== $this->memberId) {
+            $this->memberId = $data['memberId'];
+        }
+        if (isset($data['time']) && $data['time'] !== $this->time) {
+            $this->time = $data['time'];
+        }
     }
 
     public function getId()

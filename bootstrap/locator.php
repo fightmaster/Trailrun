@@ -71,6 +71,12 @@ $container[\Fightmaster\Trailrun\Competition\Handler\ViewCompetition::class] = f
         $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class]
     );
 };
+$container[\Fightmaster\Trailrun\Competition\Handler\ViewCompetitionResults::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\ViewCompetitionResults(
+        $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\Handler\CheckpointResults::class]
+    );
+};
 
 //members
 $container[\Fightmaster\Trailrun\Competition\Handler\CreateMember::class] = function ($container) {
@@ -126,6 +132,25 @@ $container[\Fightmaster\Trailrun\Competition\Handler\CheckpointResults::class] =
     return new \Fightmaster\Trailrun\Competition\Handler\CheckpointResults(
         $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class],
         $container[\Fightmaster\Trailrun\Competition\MemberRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\EditCheckpointResult::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\EditCheckpointResult(
+        $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\Handler\DefineStartCheckpointResult::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\ViewCheckpointResult::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\ViewCheckpointResult(
+        $container[\Fightmaster\Trailrun\Competition\CompetitionRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\MemberRepository::class],
+        $container[\Fightmaster\Trailrun\Competition\Handler\DefineStartCheckpointResult::class]
+    );
+};
+$container[\Fightmaster\Trailrun\Competition\Handler\DefineStartCheckpointResult::class] = function ($container) {
+    return new \Fightmaster\Trailrun\Competition\Handler\DefineStartCheckpointResult(
         $container[\Fightmaster\Trailrun\Competition\CheckpointResultRepository::class]
     );
 };

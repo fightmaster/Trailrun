@@ -37,6 +37,9 @@ class CheckpointResultRepository extends BaseRepository
         if (!empty($searchData['checkpointIds'])) {
             $filter['checkpointId']['$in'] = $searchData['checkpointIds'];
         }
+        if (!empty($searchData['memberIds'])) {
+            $filter['memberId']['$in'] = $searchData['memberIds'];
+        }
         if (!empty($searchData['memberId'])) {
             $filter['memberId'] = $searchData['memberId'];
         }

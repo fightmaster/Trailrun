@@ -70,10 +70,9 @@ class CheckpointResults
 
     /**
      * @param $competitionId
-     * @param int $limit
      * @return array
      */
-    public function all($competitionId, $limit = 10)
+    public function all($competitionId)
     {
         $checkpointResults = $this->checkpointResultRepository->findBy(['competitionId' => $competitionId]);
 
@@ -112,6 +111,60 @@ class CheckpointResults
         foreach ($members as $member) {
             $membersById[$member->getId()] = $member;
         }
+
+        return [
+            'results' => $resultsByMember,
+            'members' => $membersById
+        ];
+    }
+
+    /**
+     * @param $competitionId
+     * @param array $filter
+     * @return array
+     */
+    public function search($competitionId, array $filter)
+    {
+        /** @var CheckpointResult[] $checkpointResults */
+        $members = $this->memberRepository->findBy($filter);
+        $membersById = [];
+        foreach ($members as $member) {
+            $membersById[$member->getId()] = $member;
+        }
+
+        $checkpointResults = $this->checkpointResultRepository->findBy([
+            'competitionId' => $competitionId,
+            'memberIds' => array_keys($membersById)
+        ]);
+
+        uasort($checkpointResults, function ($checkpointResult1, $checkpointResult2) {
+            return $checkpointResult1->getTime() > $checkpointResult2->getTime();
+        });
+
+        $resultsByMember = [];
+        foreach ($checkpointResults as $checkpointResult) {
+            if (!isset($resultsByMember[$checkpointResult->getMemberId()])) {
+                $resultsByMember[$checkpointResult->getMemberId()] = [
+                    'results' => [],
+                    'startTime' => $checkpointResult->getTime(),
+                    'count' => 0
+                ];
+            }
+            $resultsByMember[$checkpointResult->getMemberId()]['results'][] = $checkpointResult;
+            $resultsByMember[$checkpointResult->getMemberId()]['count']++;
+        }
+
+
+        uasort($resultsByMember, function ($resultsByMember1, $resultsByMember2) {
+            if ($resultsByMember1['count'] == $resultsByMember2['count']) {
+                $last1 = last($resultsByMember1['results']);
+                $last2 = last($resultsByMember2['results']);
+
+                return ($last1->getTime() - $resultsByMember1['startTime']) > ($last2->getTime() - $resultsByMember2['startTime']);
+            }
+
+            return $resultsByMember1['count'] < $resultsByMember2['count'];
+        });
 
         return [
             'results' => $resultsByMember,
