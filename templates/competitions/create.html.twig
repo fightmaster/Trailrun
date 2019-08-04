@@ -1,17 +1,15 @@
-{% extends "layout.html" %}
+{% extends "layout.html.twig" %}
 
 {% block body %}
-
 <div class="page-header">
-    <h1>Редактирование Соревнования</h1>
+    <h1>Создание соревнования</h1>
 </div>
 
 <form class="form-horizontal" id="competition">
-    <input type="hidden" name="id" class="form-control" value="{{competition.id}}" required="required">
     <div class="form-group">
         <label for="name" class="col-sm-2 control-label ">Название:</label>
         <div class="col-sm-10">
-            <input type="text" name="name" class="form-control" id="name" value="{{competition.name}}" placeholder="Название Соревнования" required="required">
+            <input type="text" name="name" class="form-control" id="name" placeholder="Название Соревнования" required="required">
         </div>
     </div>
     <div class="form-group">
@@ -27,15 +25,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Теги:</label>
         <div class="col-sm-10">
-            {% set i = 0 %}
-            {% for tag in competition.tags %}
-            <div class="col-sm-5">
-                <input type="text" name="tags[]" class="form-control" placeholder="Тег" value="{{ tag }}">
-            </div>
-            {% set i = i + 1 %}
-            {% endfor %}
-
-            {% for k in i..9 %}
+            {% for k in 0..9 %}
             <div class="col-sm-5">
                 <input type="text" name="tags[]" class="form-control" placeholder="Тег">
             </div>
@@ -45,23 +35,26 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Чекпоинты:</label>
         <div class="col-sm-10">
-            {% set i = 0 %}
-            {% for checkpointId, checkpoint in competition.checkpoints %}
-            <input type="hidden" name="checkpoints[{{ loop.index - 1}}][id]" class="form-control" value="{{ checkpointId }}">
+
             <div class="col-sm-3">
-                <input type="text" name="checkpoints[{{ loop.index - 1 }}][name]" class="form-control" placeholder="Старт" value="{{ checkpoint.name }}">
+                <input type="text" name="checkpoints[0][name]" class="form-control" placeholder="Старт">
             </div>
             <div class="col-sm-2">
-                <input type="number" name="checkpoints[{{ loop.index - 1 }}][sort]" class="form-control" placeholder="1" value="{{ checkpoint.sort }}">
+                <input type="number" name="checkpoints[0][sort]" class="form-control" placeholder="1">
             </div>
-            {% set i = i + 1 %}
-            {% endfor %}
-            {% for k in i..9 %}
             <div class="col-sm-3">
-                <input type="text" name="checkpoints[{{ k }}][name]" class="form-control" placeholder="Чекпоинт {{ k + 1 }}">
+                <input type="text" name="checkpoints[1][name]" class="form-control" placeholder="Финиш">
             </div>
             <div class="col-sm-2">
-                <input type="number" name="checkpoints[{{ k }}][sort]" class="form-control" placeholder="{{ k + 1 }}">
+                <input type="number" name="checkpoints[1][sort]" class="form-control" placeholder="10">
+            </div>
+
+            {% for k in 2..9 %}
+            <div class="col-sm-3">
+                <input type="text" name="checkpoints[{{ k }}][name]" class="form-control" placeholder="Чекпоинт {{ k }}">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="checkpoints[{{ k }}][sort]" class="form-control" placeholder="{{ k }}">
             </div>
             {% endfor %}
         </div>
@@ -83,10 +76,6 @@
         return new Date(b[0], b[1]-1, b[2], b[3], b[4], b[5]);
     }
     $(function() { // on document load
-        var startTime = new Date({{competition.startTime}}*1000);
-        $('#startTime').val(startTime.getFullYear() + '-' + ("0" + startTime.getMonth()).substr(-2) + '-' + ("0" + startTime.getDate()).substr(-2) + ' ' + startTime.getHours() + ':' + ("0" + startTime.getMinutes()).substr(-2) + ':' + ("0" + startTime.getSeconds()).substr(-2));
-        var endTime = new Date({{competition.endTime}}*1000);
-        $('#endTime').val(endTime.getFullYear() + '-' + ("0" + endTime.getMonth()).substr(-2) + '-' + ("0" + endTime.getDate()).substr(-2) + ' ' + endTime.getHours() + ':' + ("0" + endTime.getMinutes()).substr(-2) + ':' + ("0" + endTime.getSeconds()).substr(-2));
         $('#competition').submit(function () {
 
             var data = $('#competition').serializeJSON();
@@ -94,13 +83,13 @@
             data.endTime = parseISOLocal(data.endTime).getTime() / 1000;
             var jsonData = JSON.stringify(data);
             $.ajax({
-                url: '/api/competitions/{{competition.id}}/',
+                url: '/api/competitions/',
                 data: jsonData,
                 dataType: 'json',
-                type: 'PUT',
+                type: 'POST',
                 async: true,
                 success: function (data) { // callback method for further manipulations
-                    location.href = '/competitions/{{competition.id}}/view/';
+                    location.href = '/competitions/';
                 },
                 error: function (data) { // if error occured
                     alert('error');

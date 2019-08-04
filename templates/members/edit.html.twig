@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout.html.twig" %}
 
 {% block body %}
 <div class="page-header">
@@ -6,7 +6,7 @@
 </div>
 <div class="table-responsive">
     <div class="col-sm-8 col-lg-8" id="breadcrumbs">
-        {% include 'links.html' with {competition: competition} only %}
+        {% include 'links.html.twig' with {competition: competition} only %}
     </div>
 </div>
 

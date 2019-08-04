@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout.html.twig" %}
 
 {% block body %}
 <div class="page-header">
@@ -6,7 +6,7 @@
 </div>
 <div class="table-responsive">
     <div class="col-sm-8 col-lg-8" id="breadcrumbs">
-        {% include 'links.html' with {competition: competition} only %}
+        {% include 'links.html.twig' with {competition: competition} only %}
     </div>
 </div>
 <div class="table-responsive">
@@ -31,12 +31,12 @@
     </div>
     <div class="table-responsive">
         <div class="col-sm-8 col-lg-8" id="last-results" style="height: 150px">
-            {% include 'results/partial/last_results.html' with {checkpointResults: lastResults.checkpointResults, members: lastResults.members} only %}
+            {% include 'results/partial/last_results.html.twig' with {checkpointResults: lastResults.checkpointResults, members: lastResults.members} only %}
         </div>
     </div>
     <div class="table-responsive">
         <div class="col-sm-8 col-lg-8" id="results">
-            {% include 'results/partial/edit_list.html' with {competition: competition, results: allResults.results, members: allResults.members} only %}
+            {% include 'results/partial/edit_list.html.twig' with {competition: competition, results: allResults.results, members: allResults.members} only %}
         </div>
     </div>
 </div>

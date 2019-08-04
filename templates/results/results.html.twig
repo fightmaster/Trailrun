@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout.html.twig" %}
 
 {% block body %}
 <div class="page-header">
@@ -10,7 +10,7 @@
 </div>
 
 <div class="table-responsive" id="results">
-    {% include 'results/partial/list.html' with {competition: competition, results: results, members: members} only %}
+    {% include 'results/partial/list.html.twig' with {competition: competition, results: results, members: members} only %}
 </div>
 {% endblock %}
 

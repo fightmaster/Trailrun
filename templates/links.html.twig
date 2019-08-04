@@ -1,4 +1,6 @@
 <ol class="breadcrumb">
+    <li><a href="{{ path_for('viewCompetition', {'competitionId': competition.id}) }}">Список Участников</a></li>
+    <li><a href="{{ path_for('competitionsMembers', {'competitionId': competition.id}) }}">Список Участников</a></li>
     <li><a href="{{ path_for('competitionsMembers', {'competitionId': competition.id}) }}">Список Участников</a></li>
     <li><a href="{{ path_for('competitionManageResults', {'competitionId': competition.id}) }}">Добавление времени</a></li>
 </ol>
