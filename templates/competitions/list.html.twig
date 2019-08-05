@@ -1,13 +1,20 @@
 {% extends "layout.html.twig" %}
 
 {% block body %}
-<div class="page-header">
-    <h1>Соревнования</h1>
-</div>
+    <div class="page-header">
+        <h1>Соревнования</h1>
+    </div>
 
-<ul>
-    {% for competition in competitions %}
-    <li><a href="{{ path_for('viewCompetition', { 'competitionId': competition.id }) }}">{{competition.name}}</a></li>
-    {% endfor %}
-</ul>
+    <div class="container page-item">
+        {% for competition in competitions %}
+            <div class="row">
+                <div class="col-2">
+                    {{competition.startTime | date('Y-m-d')}}
+                </div>
+                <div class="col">
+                    <a href="{{ path_for('viewCompetition', { 'competitionId': competition.id }) }}">{{competition.name}}</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

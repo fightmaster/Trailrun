@@ -17,7 +17,7 @@ class CompetitionRepository extends BaseRepository
 
     public function findAll()
     {
-        $cursor = $this->collection->find([], ['typeMap' => $this->getTypeMap()]);
+        $cursor = $this->collection->find([], ['typeMap' => $this->getTypeMap(), 'sort' => ['info.startTime' => -1]]);
 
         return $this->handleCursorResult($cursor, Competition::class);
     }
